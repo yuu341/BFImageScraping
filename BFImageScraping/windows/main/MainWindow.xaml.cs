@@ -10,10 +10,9 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BFImageScraping
+namespace BFImageScraping.windows.main
 {
     /// <summary>
     /// MainWindow.xaml の相互作用ロジック

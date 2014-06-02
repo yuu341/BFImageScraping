@@ -1,7 +1,7 @@
-﻿<Window x:Class="BFImageScraping.MainWindow"
+﻿<Window x:Class="BFImageScraping.windows.explorer.ExplorerWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
+        Title="ExplorerWindow" Height="300" Width="300">
     <Grid>
         
     </Grid>
