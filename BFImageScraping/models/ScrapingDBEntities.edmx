@@ -4,7 +4,30 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ScrapingDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ScrapingDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="MST_RSS">
+          <Key>
+            <PropertyRef Name="RSS_ID" />
+          </Key>
+          <Property Name="RSS_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WEBSITE_ID" Type="int" />
+          <Property Name="RSS_URL" Type="nvarchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="MST_SHAKEHAND">
+          <Key>
+            <PropertyRef Name="SHAKEHAND_ID" />
+          </Key>
+          <Property Name="SHAKEHAND_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WEBSITE_ID" Type="int" Nullable="false" />
+          <Property Name="SHAKEHAND_DNS" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MST_TAG">
+          <Key>
+            <PropertyRef Name="TAG_ID" />
+          </Key>
+          <Property Name="TAG_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TAG_NM" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
         <EntityType Name="MST_WEBSITE">
           <Key>
             <PropertyRef Name="WEBSITE_ID" />
@@ -15,44 +38,389 @@
           <Property Name="UPDATE_MIN" Type="numeric" Precision="18" Scale="0" Nullable="false" />
           <Property Name="ENABLE_FLG" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="TR_DOWNLOAD_PATH">
+          <Key>
+            <PropertyRef Name="DOWNLOAD_PATH_ID" />
+          </Key>
+          <Property Name="DOWNLOAD_PATH_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WEBSITE_ID" Type="int" Nullable="false" />
+          <Property Name="DOWNLOAD_PATH" Type="nvarchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TR_IMG">
+          <Key>
+            <PropertyRef Name="IMG_ID" />
+          </Key>
+          <Property Name="IMG_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IMG_NM" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="WIDTH" Type="int" />
+          <Property Name="HEIGHT" Type="int" />
+          <Property Name="HASH" Type="nvarchar" MaxLength="50" />
+          <Property Name="SIZE" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TR_PATH">
+          <Key>
+            <PropertyRef Name="PATH_ID" />
+          </Key>
+          <Property Name="PATH_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IMG_ID" Type="int" Nullable="false" />
+          <Property Name="IMG_PATH" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="PATH_TYPE" Type="int" Nullable="false" />
+          <Property Name="ENABLE_FLG" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TR_TAG">
+          <Key>
+            <PropertyRef Name="TAG_ID" />
+            <PropertyRef Name="IMG_ID" />
+          </Key>
+          <Property Name="TAG_ID" Type="int" Nullable="false" />
+          <Property Name="IMG_ID" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_MST_RSS_ToMST_WEBSITE">
+          <End Role="MST_WEBSITE" Type="Self.MST_WEBSITE" Multiplicity="0..1" />
+          <End Role="MST_RSS" Type="Self.MST_RSS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MST_WEBSITE">
+              <PropertyRef Name="WEBSITE_ID" />
+            </Principal>
+            <Dependent Role="MST_RSS">
+              <PropertyRef Name="WEBSITE_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MST_SHAKEHAND_ToMST_WEBSITE">
+          <End Role="MST_WEBSITE" Type="Self.MST_WEBSITE" Multiplicity="1" />
+          <End Role="MST_SHAKEHAND" Type="Self.MST_SHAKEHAND" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MST_WEBSITE">
+              <PropertyRef Name="WEBSITE_ID" />
+            </Principal>
+            <Dependent Role="MST_SHAKEHAND">
+              <PropertyRef Name="WEBSITE_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TR_DOWNLOAD_PATH_ToMST_WEBSITE">
+          <End Role="MST_WEBSITE" Type="Self.MST_WEBSITE" Multiplicity="1" />
+          <End Role="TR_DOWNLOAD_PATH" Type="Self.TR_DOWNLOAD_PATH" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MST_WEBSITE">
+              <PropertyRef Name="WEBSITE_ID" />
+            </Principal>
+            <Dependent Role="TR_DOWNLOAD_PATH">
+              <PropertyRef Name="WEBSITE_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TR_PATH_ToTR_IMG">
+          <End Role="TR_IMG" Type="Self.TR_IMG" Multiplicity="1" />
+          <End Role="TR_PATH" Type="Self.TR_PATH" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TR_IMG">
+              <PropertyRef Name="IMG_ID" />
+            </Principal>
+            <Dependent Role="TR_PATH">
+              <PropertyRef Name="IMG_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TR_TAG_ToMST_TAG">
+          <End Role="MST_TAG" Type="Self.MST_TAG" Multiplicity="1" />
+          <End Role="TR_TAG" Type="Self.TR_TAG" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MST_TAG">
+              <PropertyRef Name="TAG_ID" />
+            </Principal>
+            <Dependent Role="TR_TAG">
+              <PropertyRef Name="TAG_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TR_TAG_ToTR_IMG">
+          <End Role="TR_IMG" Type="Self.TR_IMG" Multiplicity="1" />
+          <End Role="TR_TAG" Type="Self.TR_TAG" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TR_IMG">
+              <PropertyRef Name="IMG_ID" />
+            </Principal>
+            <Dependent Role="TR_TAG">
+              <PropertyRef Name="IMG_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="ScrapingDBModelStoreContainer">
+          <EntitySet Name="MST_RSS" EntityType="Self.MST_RSS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MST_SHAKEHAND" EntityType="Self.MST_SHAKEHAND" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MST_TAG" EntityType="Self.MST_TAG" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MST_WEBSITE" EntityType="Self.MST_WEBSITE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TR_DOWNLOAD_PATH" EntityType="Self.TR_DOWNLOAD_PATH" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TR_IMG" EntityType="Self.TR_IMG" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TR_PATH" EntityType="Self.TR_PATH" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TR_TAG" EntityType="Self.TR_TAG" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_MST_RSS_ToMST_WEBSITE" Association="Self.FK_MST_RSS_ToMST_WEBSITE">
+            <End Role="MST_WEBSITE" EntitySet="MST_WEBSITE" />
+            <End Role="MST_RSS" EntitySet="MST_RSS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MST_SHAKEHAND_ToMST_WEBSITE" Association="Self.FK_MST_SHAKEHAND_ToMST_WEBSITE">
+            <End Role="MST_WEBSITE" EntitySet="MST_WEBSITE" />
+            <End Role="MST_SHAKEHAND" EntitySet="MST_SHAKEHAND" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TR_DOWNLOAD_PATH_ToMST_WEBSITE" Association="Self.FK_TR_DOWNLOAD_PATH_ToMST_WEBSITE">
+            <End Role="MST_WEBSITE" EntitySet="MST_WEBSITE" />
+            <End Role="TR_DOWNLOAD_PATH" EntitySet="TR_DOWNLOAD_PATH" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TR_PATH_ToTR_IMG" Association="Self.FK_TR_PATH_ToTR_IMG">
+            <End Role="TR_IMG" EntitySet="TR_IMG" />
+            <End Role="TR_PATH" EntitySet="TR_PATH" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TR_TAG_ToMST_TAG" Association="Self.FK_TR_TAG_ToMST_TAG">
+            <End Role="MST_TAG" EntitySet="MST_TAG" />
+            <End Role="TR_TAG" EntitySet="TR_TAG" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TR_TAG_ToTR_IMG" Association="Self.FK_TR_TAG_ToTR_IMG">
+            <End Role="TR_IMG" EntitySet="TR_IMG" />
+            <End Role="TR_TAG" EntitySet="TR_TAG" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ScrapingDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="ScrapingDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="MST_RSS" EntityType="ScrapingDBModel.MST_RSS" />
+          <EntitySet Name="MST_SHAKEHAND" EntityType="ScrapingDBModel.MST_SHAKEHAND" />
+          <EntitySet Name="MST_TAG" EntityType="ScrapingDBModel.MST_TAG" />
+          <EntitySet Name="MST_WEBSITE" EntityType="ScrapingDBModel.MST_WEBSITE" />
+          <EntitySet Name="TR_DOWNLOAD_PATH" EntityType="ScrapingDBModel.TR_DOWNLOAD_PATH" />
+          <EntitySet Name="TR_IMG" EntityType="ScrapingDBModel.TR_IMG" />
+          <EntitySet Name="TR_PATH" EntityType="ScrapingDBModel.TR_PATH" />
+          <AssociationSet Name="FK_MST_RSS_ToMST_WEBSITE" Association="ScrapingDBModel.FK_MST_RSS_ToMST_WEBSITE">
+            <End Role="MST_WEBSITE" EntitySet="MST_WEBSITE" />
+            <End Role="MST_RSS" EntitySet="MST_RSS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MST_SHAKEHAND_ToMST_WEBSITE" Association="ScrapingDBModel.FK_MST_SHAKEHAND_ToMST_WEBSITE">
+            <End Role="MST_WEBSITE" EntitySet="MST_WEBSITE" />
+            <End Role="MST_SHAKEHAND" EntitySet="MST_SHAKEHAND" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TR_DOWNLOAD_PATH_ToMST_WEBSITE" Association="ScrapingDBModel.FK_TR_DOWNLOAD_PATH_ToMST_WEBSITE">
+            <End Role="MST_WEBSITE" EntitySet="MST_WEBSITE" />
+            <End Role="TR_DOWNLOAD_PATH" EntitySet="TR_DOWNLOAD_PATH" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TR_PATH_ToTR_IMG" Association="ScrapingDBModel.FK_TR_PATH_ToTR_IMG">
+            <End Role="TR_IMG" EntitySet="TR_IMG" />
+            <End Role="TR_PATH" EntitySet="TR_PATH" />
+          </AssociationSet>
+          <AssociationSet Name="TR_TAG" Association="ScrapingDBModel.TR_TAG">
+            <End Role="MST_TAG" EntitySet="MST_TAG" />
+            <End Role="TR_IMG" EntitySet="TR_IMG" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="MST_RSS">
+          <Key>
+            <PropertyRef Name="RSS_ID" />
+          </Key>
+          <Property Name="RSS_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WEBSITE_ID" Type="Int32" />
+          <Property Name="RSS_URL" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MST_WEBSITE" Relationship="ScrapingDBModel.FK_MST_RSS_ToMST_WEBSITE" FromRole="MST_RSS" ToRole="MST_WEBSITE" />
+        </EntityType>
+        <EntityType Name="MST_SHAKEHAND">
+          <Key>
+            <PropertyRef Name="SHAKEHAND_ID" />
+          </Key>
+          <Property Name="SHAKEHAND_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WEBSITE_ID" Type="Int32" Nullable="false" />
+          <Property Name="SHAKEHAND_DNS" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MST_WEBSITE" Relationship="ScrapingDBModel.FK_MST_SHAKEHAND_ToMST_WEBSITE" FromRole="MST_SHAKEHAND" ToRole="MST_WEBSITE" />
+        </EntityType>
+        <EntityType Name="MST_TAG">
+          <Key>
+            <PropertyRef Name="TAG_ID" />
+          </Key>
+          <Property Name="TAG_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TAG_NM" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="TR_IMG" Relationship="ScrapingDBModel.TR_TAG" FromRole="MST_TAG" ToRole="TR_IMG" />
+        </EntityType>
         <EntityType Name="MST_WEBSITE">
           <Key>
             <PropertyRef Name="WEBSITE_ID" />
           </Key>
           <Property Name="WEBSITE_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="WEBSITE_NM" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="WEBSITE_URL" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="UPDATE_MIN" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="WEBSITE_NM" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="WEBSITE_URL" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="UPDATE_MIN" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
           <Property Name="ENABLE_FLG" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="MST_RSS" Relationship="ScrapingDBModel.FK_MST_RSS_ToMST_WEBSITE" FromRole="MST_WEBSITE" ToRole="MST_RSS" />
+          <NavigationProperty Name="MST_SHAKEHAND" Relationship="ScrapingDBModel.FK_MST_SHAKEHAND_ToMST_WEBSITE" FromRole="MST_WEBSITE" ToRole="MST_SHAKEHAND" />
+          <NavigationProperty Name="TR_DOWNLOAD_PATH" Relationship="ScrapingDBModel.FK_TR_DOWNLOAD_PATH_ToMST_WEBSITE" FromRole="MST_WEBSITE" ToRole="TR_DOWNLOAD_PATH" />
         </EntityType>
-        <EntityContainer Name="ScrapingDBEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="MST_WEBSITE" EntityType="Self.MST_WEBSITE" />
-        </EntityContainer>
-      </Schema>
+        <EntityType Name="TR_DOWNLOAD_PATH">
+          <Key>
+            <PropertyRef Name="DOWNLOAD_PATH_ID" />
+          </Key>
+          <Property Name="DOWNLOAD_PATH_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WEBSITE_ID" Type="Int32" Nullable="false" />
+          <Property Name="DOWNLOAD_PATH" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MST_WEBSITE" Relationship="ScrapingDBModel.FK_TR_DOWNLOAD_PATH_ToMST_WEBSITE" FromRole="TR_DOWNLOAD_PATH" ToRole="MST_WEBSITE" />
+        </EntityType>
+        <EntityType Name="TR_IMG">
+          <Key>
+            <PropertyRef Name="IMG_ID" />
+          </Key>
+          <Property Name="IMG_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IMG_NM" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="WIDTH" Type="Int32" />
+          <Property Name="HEIGHT" Type="Int32" />
+          <Property Name="HASH" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SIZE" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TR_PATH" Relationship="ScrapingDBModel.FK_TR_PATH_ToTR_IMG" FromRole="TR_IMG" ToRole="TR_PATH" />
+          <NavigationProperty Name="MST_TAG" Relationship="ScrapingDBModel.TR_TAG" FromRole="TR_IMG" ToRole="MST_TAG" />
+        </EntityType>
+        <EntityType Name="TR_PATH">
+          <Key>
+            <PropertyRef Name="PATH_ID" />
+          </Key>
+          <Property Name="PATH_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IMG_ID" Type="Int32" Nullable="false" />
+          <Property Name="IMG_PATH" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="PATH_TYPE" Type="Int32" Nullable="false" />
+          <Property Name="ENABLE_FLG" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="TR_IMG" Relationship="ScrapingDBModel.FK_TR_PATH_ToTR_IMG" FromRole="TR_PATH" ToRole="TR_IMG" />
+        </EntityType>
+        <Association Name="FK_MST_RSS_ToMST_WEBSITE">
+          <End Type="ScrapingDBModel.MST_WEBSITE" Role="MST_WEBSITE" Multiplicity="0..1" />
+          <End Type="ScrapingDBModel.MST_RSS" Role="MST_RSS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MST_WEBSITE">
+              <PropertyRef Name="WEBSITE_ID" />
+            </Principal>
+            <Dependent Role="MST_RSS">
+              <PropertyRef Name="WEBSITE_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MST_SHAKEHAND_ToMST_WEBSITE">
+          <End Type="ScrapingDBModel.MST_WEBSITE" Role="MST_WEBSITE" Multiplicity="1" />
+          <End Type="ScrapingDBModel.MST_SHAKEHAND" Role="MST_SHAKEHAND" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MST_WEBSITE">
+              <PropertyRef Name="WEBSITE_ID" />
+            </Principal>
+            <Dependent Role="MST_SHAKEHAND">
+              <PropertyRef Name="WEBSITE_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TR_DOWNLOAD_PATH_ToMST_WEBSITE">
+          <End Type="ScrapingDBModel.MST_WEBSITE" Role="MST_WEBSITE" Multiplicity="1" />
+          <End Type="ScrapingDBModel.TR_DOWNLOAD_PATH" Role="TR_DOWNLOAD_PATH" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MST_WEBSITE">
+              <PropertyRef Name="WEBSITE_ID" />
+            </Principal>
+            <Dependent Role="TR_DOWNLOAD_PATH">
+              <PropertyRef Name="WEBSITE_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TR_PATH_ToTR_IMG">
+          <End Type="ScrapingDBModel.TR_IMG" Role="TR_IMG" Multiplicity="1" />
+          <End Type="ScrapingDBModel.TR_PATH" Role="TR_PATH" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TR_IMG">
+              <PropertyRef Name="IMG_ID" />
+            </Principal>
+            <Dependent Role="TR_PATH">
+              <PropertyRef Name="IMG_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="TR_TAG">
+          <End Type="ScrapingDBModel.MST_TAG" Role="MST_TAG" Multiplicity="*" />
+          <End Type="ScrapingDBModel.TR_IMG" Role="TR_IMG" Multiplicity="*" />
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="ScrapingDBModelStoreContainer" CdmEntityContainer="ScrapingDBEntities">
-          <EntitySetMapping Name="MST_WEBSITE">
-            <EntityTypeMapping TypeName="ScrapingDBModel.MST_WEBSITE">
-              <MappingFragment StoreEntitySet="MST_WEBSITE">
+          <EntitySetMapping Name="MST_RSS">
+            <EntityTypeMapping TypeName="ScrapingDBModel.MST_RSS">
+              <MappingFragment StoreEntitySet="MST_RSS">
+                <ScalarProperty Name="RSS_URL" ColumnName="RSS_URL" />
                 <ScalarProperty Name="WEBSITE_ID" ColumnName="WEBSITE_ID" />
-                <ScalarProperty Name="WEBSITE_NM" ColumnName="WEBSITE_NM" />
-                <ScalarProperty Name="WEBSITE_URL" ColumnName="WEBSITE_URL" />
-                <ScalarProperty Name="UPDATE_MIN" ColumnName="UPDATE_MIN" />
-                <ScalarProperty Name="ENABLE_FLG" ColumnName="ENABLE_FLG" />
+                <ScalarProperty Name="RSS_ID" ColumnName="RSS_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="MST_SHAKEHAND">
+            <EntityTypeMapping TypeName="ScrapingDBModel.MST_SHAKEHAND">
+              <MappingFragment StoreEntitySet="MST_SHAKEHAND">
+                <ScalarProperty Name="SHAKEHAND_DNS" ColumnName="SHAKEHAND_DNS" />
+                <ScalarProperty Name="WEBSITE_ID" ColumnName="WEBSITE_ID" />
+                <ScalarProperty Name="SHAKEHAND_ID" ColumnName="SHAKEHAND_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MST_TAG">
+            <EntityTypeMapping TypeName="ScrapingDBModel.MST_TAG">
+              <MappingFragment StoreEntitySet="MST_TAG">
+                <ScalarProperty Name="TAG_NM" ColumnName="TAG_NM" />
+                <ScalarProperty Name="TAG_ID" ColumnName="TAG_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MST_WEBSITE">
+            <EntityTypeMapping TypeName="ScrapingDBModel.MST_WEBSITE">
+              <MappingFragment StoreEntitySet="MST_WEBSITE">
+                <ScalarProperty Name="ENABLE_FLG" ColumnName="ENABLE_FLG" />
+                <ScalarProperty Name="UPDATE_MIN" ColumnName="UPDATE_MIN" />
+                <ScalarProperty Name="WEBSITE_URL" ColumnName="WEBSITE_URL" />
+                <ScalarProperty Name="WEBSITE_NM" ColumnName="WEBSITE_NM" />
+                <ScalarProperty Name="WEBSITE_ID" ColumnName="WEBSITE_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TR_DOWNLOAD_PATH">
+            <EntityTypeMapping TypeName="ScrapingDBModel.TR_DOWNLOAD_PATH">
+              <MappingFragment StoreEntitySet="TR_DOWNLOAD_PATH">
+                <ScalarProperty Name="DOWNLOAD_PATH" ColumnName="DOWNLOAD_PATH" />
+                <ScalarProperty Name="WEBSITE_ID" ColumnName="WEBSITE_ID" />
+                <ScalarProperty Name="DOWNLOAD_PATH_ID" ColumnName="DOWNLOAD_PATH_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TR_IMG">
+            <EntityTypeMapping TypeName="ScrapingDBModel.TR_IMG">
+              <MappingFragment StoreEntitySet="TR_IMG">
+                <ScalarProperty Name="SIZE" ColumnName="SIZE" />
+                <ScalarProperty Name="HASH" ColumnName="HASH" />
+                <ScalarProperty Name="HEIGHT" ColumnName="HEIGHT" />
+                <ScalarProperty Name="WIDTH" ColumnName="WIDTH" />
+                <ScalarProperty Name="IMG_NM" ColumnName="IMG_NM" />
+                <ScalarProperty Name="IMG_ID" ColumnName="IMG_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TR_PATH">
+            <EntityTypeMapping TypeName="ScrapingDBModel.TR_PATH">
+              <MappingFragment StoreEntitySet="TR_PATH">
+                <ScalarProperty Name="ENABLE_FLG" ColumnName="ENABLE_FLG" />
+                <ScalarProperty Name="PATH_TYPE" ColumnName="PATH_TYPE" />
+                <ScalarProperty Name="IMG_PATH" ColumnName="IMG_PATH" />
+                <ScalarProperty Name="IMG_ID" ColumnName="IMG_ID" />
+                <ScalarProperty Name="PATH_ID" ColumnName="PATH_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="TR_TAG" TypeName="ScrapingDBModel.TR_TAG" StoreEntitySet="TR_TAG">
+            <EndProperty Name="TR_IMG">
+              <ScalarProperty Name="IMG_ID" ColumnName="IMG_ID" />
+            </EndProperty>
+            <EndProperty Name="MST_TAG">
+              <ScalarProperty Name="TAG_ID" ColumnName="TAG_ID" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

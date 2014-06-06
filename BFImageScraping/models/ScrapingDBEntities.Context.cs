@@ -25,6 +25,12 @@ namespace BFImageScraping.models
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<MST_RSS> MST_RSS { get; set; }
+        public virtual DbSet<MST_SHAKEHAND> MST_SHAKEHAND { get; set; }
+        public virtual DbSet<MST_TAG> MST_TAG { get; set; }
         public virtual DbSet<MST_WEBSITE> MST_WEBSITE { get; set; }
+        public virtual DbSet<TR_DOWNLOAD_PATH> TR_DOWNLOAD_PATH { get; set; }
+        public virtual DbSet<TR_IMG> TR_IMG { get; set; }
+        public virtual DbSet<TR_PATH> TR_PATH { get; set; }
     }
 }

@@ -4,8 +4,19 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="f21ff07e60fa49b4ba4ac6c5a21f0121" Name="Diagram1">
-        <EntityTypeShape EntityType="ScrapingDBModel.MST_WEBSITE" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+      <Diagram DiagramId="f21ff07e60fa49b4ba4ac6c5a21f0121" Name="Diagram1" ZoomLevel="82">
+        <EntityTypeShape EntityType="ScrapingDBModel.MST_RSS" Width="1.5" PointX="3" PointY="6.625" />
+        <EntityTypeShape EntityType="ScrapingDBModel.MST_SHAKEHAND" Width="1.5" PointX="3" PointY="1.25" />
+        <EntityTypeShape EntityType="ScrapingDBModel.MST_TAG" Width="1.5" PointX="5.75" PointY="1.5" />
+        <EntityTypeShape EntityType="ScrapingDBModel.MST_WEBSITE" Width="1.5" PointX="0.75" PointY="3.5" />
+        <EntityTypeShape EntityType="ScrapingDBModel.TR_DOWNLOAD_PATH" Width="1.5" PointX="3" PointY="3.875" />
+        <EntityTypeShape EntityType="ScrapingDBModel.TR_IMG" Width="1.5" PointX="8" PointY="1" />
+        <EntityTypeShape EntityType="ScrapingDBModel.TR_PATH" Width="1.5" PointX="10.25" PointY="1.125" />
+        <AssociationConnector Association="ScrapingDBModel.FK_MST_RSS_ToMST_WEBSITE" />
+        <AssociationConnector Association="ScrapingDBModel.FK_MST_SHAKEHAND_ToMST_WEBSITE" />
+        <AssociationConnector Association="ScrapingDBModel.FK_TR_DOWNLOAD_PATH_ToMST_WEBSITE" />
+        <AssociationConnector Association="ScrapingDBModel.FK_TR_PATH_ToTR_IMG" />
+        <AssociationConnector Association="ScrapingDBModel.TR_TAG" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

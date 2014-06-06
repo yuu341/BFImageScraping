@@ -81,6 +81,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="models\MST_RSS.cs">
+      <DependentUpon>ScrapingDBEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="models\MST_SHAKEHAND.cs">
+      <DependentUpon>ScrapingDBEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="models\MST_TAG.cs">
+      <DependentUpon>ScrapingDBEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="models\MST_WEBSITE.cs">
       <DependentUpon>ScrapingDBEntities.tt</DependentUpon>
     </Compile>
@@ -98,6 +107,15 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ScrapingDBEntities.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="models\TR_DOWNLOAD_PATH.cs">
+      <DependentUpon>ScrapingDBEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="models\TR_IMG.cs">
+      <DependentUpon>ScrapingDBEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="models\TR_PATH.cs">
+      <DependentUpon>ScrapingDBEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="utils\parent\ModelBase.cs" />
     <Compile Include="utils\parent\ViewModelBase.cs" />
@@ -188,7 +206,14 @@
     <Content Include="ScrapingDB_log.ldf">
       <DependentUpon>ScrapingDB.mdf</DependentUpon>
     </Content>
+    <Content Include="sqls\dbo.MST_RSS.sql" />
+    <Content Include="sqls\dbo.MST_SHAKEHAND.sql" />
+    <Content Include="sqls\dbo.MST_TAG.sql" />
     <Content Include="sqls\dbo.MST_WEBSITE.sql" />
+    <Content Include="sqls\dbo.TR_DOWNLOAD_PATH.sql" />
+    <Content Include="sqls\dbo.TR_IMG.sql" />
+    <Content Include="sqls\dbo.TR_PATH.sql" />
+    <Content Include="sqls\dbo.TR_TAG.sql" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
