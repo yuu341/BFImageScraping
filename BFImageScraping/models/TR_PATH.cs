@@ -12,23 +12,14 @@ namespace BFImageScraping.models
     using System;
     using System.Collections.Generic;
     
-    public partial class MST_WEBSITE
+    public partial class TR_PATH
     {
-        public MST_WEBSITE()
-        {
-            this.MST_RSS = new HashSet<MST_RSS>();
-            this.MST_SHAKEHAND = new HashSet<MST_SHAKEHAND>();
-            this.TR_DOWNLOAD_PATH = new HashSet<TR_DOWNLOAD_PATH>();
-        }
-    
-        public int WEBSITE_ID { get; set; }
-        public string WEBSITE_NM { get; set; }
-        public string WEBSITE_URL { get; set; }
-        public decimal UPDATE_MIN { get; set; }
+        public int PATH_ID { get; set; }
+        public int IMG_ID { get; set; }
+        public string IMG_PATH { get; set; }
+        public int PATH_TYPE { get; set; }
         public bool ENABLE_FLG { get; set; }
     
-        public virtual ICollection<MST_RSS> MST_RSS { get; set; }
-        public virtual ICollection<MST_SHAKEHAND> MST_SHAKEHAND { get; set; }
-        public virtual ICollection<TR_DOWNLOAD_PATH> TR_DOWNLOAD_PATH { get; set; }
+        public virtual TR_IMG TR_IMG { get; set; }
     }
 }
